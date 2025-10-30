@@ -35,9 +35,7 @@ const Features = () => {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold">
             Why Choose{" "}
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Kagentic
-            </span>
+            <span className="bg-gradient-primary bg-clip-text ">Kagentic</span>
           </h2>
           <p className="text-lg text-muted-foreground">
             Built for scale, designed for excellence, trusted by innovators

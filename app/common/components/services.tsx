@@ -44,9 +44,7 @@ const Services = () => {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold">
             Our{" "}
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Solutions
-            </span>
+            <span className="bg-gradient-primary bg-clip-text ">Solutions</span>
           </h2>
           <p className="text-lg text-muted-foreground">
             Comprehensive AI services designed to accelerate your transformation

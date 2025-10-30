@@ -14,7 +14,7 @@ const CTA = () => {
             <div className="space-y-4">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold">
                 Ready to Excel with{" "}
-                <span className="bg-gradient-primary bg-clip-text text-transparent">
+                <span className="bg-gradient-primary bg-clip-text ">
                   Agentic AI?
                 </span>
               </h2>

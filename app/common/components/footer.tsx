@@ -14,7 +14,7 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1 space-y-4">
-            <h3 className="text-xl font-display font-bold bg-gradient-primary bg-clip-text text-transparent">
+            <h3 className="text-xl font-display font-bold bg-gradient-primary bg-clip-text ">
               Kagentic Solution
             </h3>
             <p className="text-sm text-muted-foreground">
