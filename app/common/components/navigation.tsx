@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router";
 import { useState } from "react";
 
 const Navigation = () => {
@@ -33,8 +34,12 @@ const Navigation = () => {
                 {item.label}
               </a>
             ))}
-            <Button className="bg-gradient-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity">
-              Get Started
+            <Button
+              className="bg-gradient-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
+              variant={"outline"}
+              asChild
+            >
+              <Link to="/dashboard">Get Started</Link>
             </Button>
           </div>
 
@@ -70,8 +75,11 @@ const Navigation = () => {
                 {item.label}
               </a>
             ))}
-            <Button className="w-full mt-4 bg-gradient-primary text-primary-foreground font-semibold">
-              Get Started
+            <Button
+              className="w-full mt-4 bg-gradient-primary text-primary-foreground font-semibold cursor-pointer"
+              asChild
+            >
+              <Link to="/dashboard">Get Started</Link>
             </Button>
           </div>
         </div>
