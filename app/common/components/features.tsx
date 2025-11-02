@@ -6,25 +6,25 @@ const Features = () => {
       icon: Rocket,
       title: "Rapid Deployment",
       description:
-        "Get your AI solutions up and running in days, not months. Our pre-built agents accelerate time-to-market.",
+        "Launch AI solutions in days, not months. Our ready-to-use agents get you to market faster.",
     },
     {
       icon: Shield,
       title: "Enterprise Security",
       description:
-        "Built with security-first architecture. SOC2 compliant infrastructure and end-to-end encryption.",
+        "Your data stays safe with enterprise-grade security, compliance certifications, and end-to-end encryption.",
     },
     {
       icon: Clock,
       title: "24/7 Reliability",
       description:
-        "99.9% uptime SLA with continuous monitoring and automated failover systems.",
+        "99.9% uptime guarantee with continuous monitoring and automatic failover—your systems keep running.",
     },
     {
       icon: Users,
       title: "Expert Support",
       description:
-        "Dedicated AI specialists available around the clock to ensure your success.",
+        "Get help when you need it. Our AI specialists are available 24/7 to guide you every step of the way.",
     },
   ];
 
@@ -38,7 +38,7 @@ const Features = () => {
             <span className="bg-gradient-primary bg-clip-text ">Kagentic</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Built for scale, designed for excellence, trusted by innovators
+            Everything you need to deploy Agentic AI with confidence—security, speed, and expert guidance included
           </p>
         </div>
 

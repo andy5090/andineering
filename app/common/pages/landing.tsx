@@ -12,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
     {
       name: "description",
       content:
-        "Make your business excels with Agentic AI Transformation over Digital Transformation",
+        "Transform your business with Agentic AI. Move beyond digital transformation to intelligent automation that works for you.",
     },
   ];
 }

@@ -27,14 +27,12 @@ const Hero = () => {
 
           {/* Main headline */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black leading-tight">
-            Make your business excels at Agentic AX over DX
+            Your business, powered by Agentic AI
           </h1>
 
           {/* Subheadline */}
           <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Transform your business with cutting-edge agentic AI solutions. We
-            help you leap beyond digital transformation into the age of AI
-            excellence.
+            Move beyond digital transformation to agentic AI. Build autonomous systems that think, act, and adapt—so you can focus on what matters most.
           </p>
 
           {/* CTA Buttons */}
@@ -43,7 +41,7 @@ const Hero = () => {
               size="lg"
               className="bg-gradient-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity group min-w-[200px]"
             >
-              Start Your Journey
+              Get started free
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
@@ -51,7 +49,7 @@ const Hero = () => {
               variant="outline"
               className="border-border hover:bg-card/50 min-w-[200px]"
             >
-              Explore Solutions
+              See how it works
             </Button>
           </div>
 
@@ -61,19 +59,19 @@ const Hero = () => {
               <div className="text-3xl md:text-4xl font-display font-bold text-primary">
                 100+
               </div>
-              <div className="text-sm text-muted-foreground">AI Agents</div>
+              <div className="text-sm text-muted-foreground">Ready-to-use agents</div>
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-display font-bold text-secondary">
                 24/7
               </div>
-              <div className="text-sm text-muted-foreground">Support</div>
+              <div className="text-sm text-muted-foreground">Expert support</div>
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-display font-bold text-primary">
                 50+
               </div>
-              <div className="text-sm text-muted-foreground">Projects</div>
+              <div className="text-sm text-muted-foreground">Successful launches</div>
             </div>
           </div>
         </div>

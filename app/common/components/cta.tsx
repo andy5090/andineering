@@ -13,14 +13,13 @@ const CTA = () => {
           <div className="relative bg-card/50 backdrop-blur-sm border border-border rounded-3xl p-8 md:p-16 text-center space-y-8">
             <div className="space-y-4">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold">
-                Ready to Excel with{" "}
+                Ready to transform with{" "}
                 <span className="bg-gradient-primary bg-clip-text ">
                   Agentic AI?
                 </span>
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                Join leading companies transforming their operations with AI.
-                Let's build the future together.
+                Join companies using agentic AI to automate workflows, reduce costs, and unlock new possibilities. Let's make it happen together.
               </p>
             </div>
 
@@ -61,7 +60,7 @@ const CTA = () => {
                   className="w-2 h-2 rounded-full bg-primary animate-pulse"
                   style={{ animationDelay: "2s" }}
                 ></div>
-                Quick setup
+                Get started in minutes
               </div>
             </div>
           </div>

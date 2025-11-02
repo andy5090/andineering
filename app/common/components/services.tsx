@@ -7,33 +7,33 @@ const Services = () => {
       icon: Bot,
       title: "Multi-Agent APIs",
       description:
-        "Pre-defined, ready-made agentic AI APIs that seamlessly integrate into your existing infrastructure. Deploy sophisticated AI workflows in minutes, not months.",
+        "Ready-made Agentic AI agents that connect to your systems instantly. Start automating complex workflows today—no lengthy development cycles.",
       features: [
-        "Pre-built Workflows",
-        "Quick Integration",
-        "Scalable Architecture",
+        "Pre-built intelligent workflows",
+        "Connect in minutes, not months",
+        "Grows with your business",
       ],
     },
     {
       icon: Code2,
       title: "Custom Development",
       description:
-        "Full-stack web and mobile app development powered by AI. We build modern, scalable applications tailored to your unique business needs.",
-      features: ["Web Applications", "Mobile Apps", "Cloud Solutions"],
+        "We build AI-powered apps that solve your specific challenges. From web to mobile, our solutions scale as you grow.",
+      features: ["Web applications", "Mobile apps", "Cloud-ready infrastructure"],
     },
     {
       icon: Workflow,
       title: "AI Transformation",
       description:
-        "Strategic consulting and implementation to transform your business processes with agentic AI. Move beyond digital to AI-first operations.",
-      features: ["Process Automation", "AI Strategy", "Implementation Support"],
+        "We help you identify where Agentic AI can make the biggest impact—then we implement it. Transform how your team works, not just your tech stack.",
+      features: ["Identify high-impact opportunities", "Custom AI strategy", "End-to-end implementation"],
     },
     {
       icon: Zap,
       title: "Enterprise Solutions",
       description:
-        "Enterprise-grade AI solutions designed for scale, security, and compliance. Built for organizations ready to lead in the AI era.",
-      features: ["High Performance", "Secure & Compliant", "24/7 Support"],
+        "Built to meet enterprise standards: secure, compliant, and reliable. Deploy with confidence knowing your data and operations are protected.",
+      features: ["Enterprise-grade security", "Industry compliance standards", "Always-on support"],
     },
   ];
 
@@ -47,8 +47,7 @@ const Services = () => {
             <span className="bg-gradient-primary bg-clip-text ">Solutions</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Comprehensive AI services designed to accelerate your transformation
-            journey
+            Everything you need to deploy Agentic AI agents that work autonomously and deliver real results
           </p>
         </div>
 
