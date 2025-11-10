@@ -1,3 +1,4 @@
+import { submitInquiry } from "~/features/inquiries/mutations";
 import type { Route } from "../../common/pages/+types/landing";
 import CTA from "../components/cta";
 import Features from "../components/features";
@@ -5,6 +6,7 @@ import Footer from "../components/footer";
 import Hero from "../components/hero";
 import Navigation from "../components/navigation";
 import Services from "../components/services";
+import z from "zod";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,7 +19,29 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Landing() {
+const formSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  message: z.string().min(1),
+});
+
+export const action = async ({ request }: { request: Request }) => {
+  const formData = await request.formData();
+
+  const validatedFields = formSchema.safeParse(Object.fromEntries(formData));
+
+  if (!validatedFields.success) {
+    return { errors: validatedFields.error.flatten().fieldErrors };
+  }
+
+  const { name, email, message } = validatedFields.data;
+
+  await submitInquiry({ name, email, message });
+
+  return { success: true };
+};
+
+export default function Landing({}: Route.ComponentProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navigation />

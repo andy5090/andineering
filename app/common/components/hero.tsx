@@ -4,11 +4,16 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Badge } from "./ui/badge";
 
+import { Form, useActionData } from "react-router";
+import type { action } from "../pages/landing";
+
 const Hero = () => {
+  const actionData = useActionData<typeof action>();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 md:pt-20">
       {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-card">
+      <div className="absolute inset-0 bg-linear-to-br from-background via-background to-card">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_70%,transparent_110%)] opacity-20"></div>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float"></div>
         <div
@@ -53,12 +58,12 @@ const Hero = () => {
 
           {/* Inquiry Form */}
           <div className="max-w-3xl mx-auto">
-            <form className="space-y-4">
-              <Input type="text" placeholder="Name" />
-              <Input type="email" placeholder="Email" />
-              <Textarea placeholder="Message" />
+            <Form className="space-y-4" method="post">
+              <Input name="name" type="text" placeholder="Name" />
+              <Input name="email" type="email" placeholder="Email" />
+              <Textarea name="message" placeholder="Message" />
               <Button type="submit">Ask anything</Button>
-            </form>
+            </Form>
           </div>
 
           {/* Stats */}
