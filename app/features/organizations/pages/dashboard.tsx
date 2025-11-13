@@ -1,8 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Copy,
   Key,
@@ -14,11 +12,113 @@ import {
 import Footer from "~/common/components/footer";
 import type { Route } from "./+types/dashboard";
 import { authMiddleware } from "~/middleware/auth";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "~/common/components/ui/dialog";
+import db from "~/db";
+import { apiKeys, organizations, orgsToUsers } from "../schema";
+import { eq } from "drizzle-orm";
+import { auth } from "~/lib/auth";
+import { Form, redirect } from "react-router";
+import z from "zod";
+import InputPair from "~/common/components/input-pair";
+import { randomUUID } from "crypto";
 
 export const middleware: Route.MiddlewareFunction[] = [authMiddleware];
 
-const Dashboard = () => {
-  //   const { toast } = useToast();
+export const loader = async ({ request }) => {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
+
+  const orgsToUsersData = await db
+    .select()
+    .from(orgsToUsers)
+    .where(eq(orgsToUsers.userId, session?.user.id ?? ""));
+
+  if (orgsToUsersData.length === 0) {
+    return { organization: null };
+  }
+
+  const organization = await db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.id, orgsToUsersData[0].organizationId!))
+    .limit(1)
+    .then(([organization]) => organization ?? null);
+
+  const apiKeysData = await db
+    .select()
+    .from(apiKeys)
+    .where(eq(apiKeys.organization_id, organization?.id!));
+
+  return { organization, apiKeys: apiKeysData };
+};
+
+const formSchema = z.object({
+  name: z.string("Name is required").min(1).max(255),
+  description: z.string().optional(),
+});
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
+
+  if (!session?.user.id) {
+    return redirect("/");
+  }
+
+  const formData = await request.formData();
+  const { success, error, data } = formSchema.safeParse(
+    Object.fromEntries(formData)
+  );
+
+  if (!success) {
+    return { fieldErrors: error.flatten().fieldErrors };
+  }
+
+  const { name, description } = data;
+
+  const [organization] = await db
+    .insert(organizations)
+    .values({
+      name,
+      description: description ?? "",
+    })
+    .returning();
+
+  await Promise.all([
+    db.insert(orgsToUsers).values({
+      organizationId: organization.id,
+      userId: session.user.id,
+    }),
+    db.insert(apiKeys).values({
+      name: "default",
+      organization_id: organization.id,
+      api_key: `kg_${organization.id}_${randomUUID()}`,
+    }),
+  ]);
+
+  return {
+    success: true,
+  };
+};
+
+const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
+  const { organization } = loaderData;
+
+  const [openOrgDetailsDialog, setOpenOrgDetailsDialog] =
+    useState(!organization);
+
+  useEffect(() => {
+    if (actionData?.success) {
+      setOpenOrgDetailsDialog(false);
+    }
+  }, [actionData]);
+
   const [apiKeys, setApiKeys] = useState([
     {
       id: "1",
@@ -103,17 +203,112 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="pt-24 pb-16">
+      <Dialog open={openOrgDetailsDialog}>
+        <DialogContent>
+          <DialogTitle>Organization Details</DialogTitle>
+          <Form className="space-y-4" method="post">
+            <InputPair
+              name="name"
+              label="Org Name"
+              description="The name of the organization"
+              required
+              defaultValue={organization?.name}
+            />
+            {actionData && "fieldErrors" in actionData && (
+              <p className="text-red-500">
+                {actionData.fieldErrors?.name?.join(", ")}
+              </p>
+            )}
+            <InputPair
+              name="description"
+              label="Description"
+              description="The description of the organization"
+              textArea
+              defaultValue={organization?.description}
+            />
+            <Button type="submit">Save</Button>
+          </Form>
+        </DialogContent>
+      </Dialog>
+      <main className="pt-32 pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-12">
             <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
-              Dashboard
+              {loaderData.organization?.name}
             </h1>
             <p className="text-lg text-muted-foreground">
-              Monitor your API usage and manage your keys
+              {loaderData.organization?.description}
             </p>
           </div>
+
+          {/* API Keys Management */}
+          <Card className="p-6 bg-card/50 backdrop-blur-sm border-border mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">API Keys</h2>
+              <Button onClick={() => setShowNewKeyDialog(!showNewKeyDialog)}>
+                <Key className="mr-2 h-4 w-4" />
+                Generate New Key
+              </Button>
+            </div>
+
+            <div className="space-y-4">
+              {loaderData.apiKeys?.map((apiKey) => (
+                <div
+                  key={apiKey.api_key}
+                  className="p-4 bg-muted/10 rounded-lg border border-border hover:border-primary/50 transition-all"
+                >
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-1 text-left">
+                        {apiKey.name}
+                      </h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <code className="text-sm bg-muted px-2 py-1 rounded font-mono">
+                          {apiKey.api_key}
+                        </code>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => copyToClipboard(apiKey.api_key)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="flex gap-4 text-sm text-muted-foreground">
+                        <span>
+                          Created: {apiKey.created_at.toLocaleDateString()}
+                        </span>
+                        {/* <span>•</span> */}
+                        {/* <span>{apiKey.calls.toLocaleString()} calls</span> */}
+                      </div>
+                    </div>
+                    {apiKey.name !== "default" && (
+                      <Button variant="outline" size="sm">
+                        Revoke
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Dialog open={showNewKeyDialog} onOpenChange={setShowNewKeyDialog}>
+            <DialogContent>
+              <DialogTitle>Add API Key</DialogTitle>
+              <Form className="space-y-4" method="post">
+                <InputPair
+                  name="name"
+                  label="Name"
+                  description="The name of the API key"
+                  required
+                />
+                <Button type="submit">Add</Button>
+              </Form>
+            </DialogContent>
+          </Dialog>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -161,88 +356,6 @@ const Dashboard = () => {
                   API calls tracked in real-time
                 </p>
               </div>
-            </div>
-          </Card>
-
-          {/* API Keys Management */}
-          <Card className="p-6 bg-card/50 backdrop-blur-sm border-border">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">API Keys</h2>
-              <Button
-                onClick={() => setShowNewKeyDialog(!showNewKeyDialog)}
-                className="bg-gradient-primary text-primary-foreground hover:opacity-90"
-              >
-                <Key className="mr-2 h-4 w-4" />
-                Generate New Key
-              </Button>
-            </div>
-
-            {/* New Key Form */}
-            {showNewKeyDialog && (
-              <div className="mb-6 p-4 bg-muted/20 rounded-lg border border-border animate-fade-in">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="keyName">API Key Name</Label>
-                    <Input
-                      id="keyName"
-                      placeholder="e.g., Production API, Mobile App"
-                      value={newKeyName}
-                      onChange={(e) => setNewKeyName(e.target.value)}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button onClick={generateApiKey} className="bg-primary">
-                      Generate
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowNewKeyDialog(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Keys List */}
-            <div className="space-y-4">
-              {apiKeys.map((apiKey) => (
-                <div
-                  key={apiKey.id}
-                  className="p-4 bg-muted/10 rounded-lg border border-border hover:border-primary/50 transition-all"
-                >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg mb-1">
-                        {apiKey.name}
-                      </h3>
-                      <div className="flex items-center gap-2 mb-2">
-                        <code className="text-sm bg-muted px-2 py-1 rounded font-mono">
-                          {apiKey.key}
-                        </code>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => copyToClipboard(apiKey.key)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Copy className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="flex gap-4 text-sm text-muted-foreground">
-                        <span>Created: {apiKey.created}</span>
-                        <span>•</span>
-                        <span>{apiKey.calls.toLocaleString()} calls</span>
-                      </div>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Revoke
-                    </Button>
-                  </div>
-                </div>
-              ))}
             </div>
           </Card>
         </div>

@@ -36,6 +36,7 @@ export const orgsToUsers = pgTable(
 
 export const apiKeys = pgTable("api_keys", {
   id: serial("id").primaryKey(),
+  name: text().notNull(),
   api_key: text().notNull(),
   organization_id: serial("organization_id").references(
     () => organizations.id,
