@@ -4,5 +4,6 @@ export default [
   index("common/pages/landing.tsx"),
   route("/dashboard", "features/organizations/pages/dashboard.tsx"),
   route("/agents", "features/agents/pages/agents-list.tsx"),
-  route("/api/auth/*", "features/auth/auth-handler.tsx"),
+  route("/api/auth/*", "api/auth.ts"),
+  route("/api/trpc/*", "api/trpc.ts"),
 ] satisfies RouteConfig;

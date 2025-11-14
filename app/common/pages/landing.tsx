@@ -1,4 +1,4 @@
-import { submitInquiry } from "~/features/inquiries/mutations";
+import { submitInquiry } from "~/features/inquiries/api";
 import type { Route } from "../../common/pages/+types/landing";
 import CTA from "../components/cta";
 import Features from "../components/features";
@@ -41,8 +41,6 @@ export const action = async ({ request }: { request: Request }) => {
 };
 
 export default function Landing({ loaderData }: Route.ComponentProps) {
-  // const { isLoggedIn } = useOutletContext<{ isLoggedIn: boolean }>();
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main>

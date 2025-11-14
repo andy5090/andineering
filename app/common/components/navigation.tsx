@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router";
 import { useState } from "react";
-import { signIn, signOut } from "~/features/auth/auth-client";
+import { signIn, signOut } from "~/lib/auth/client";
 
 const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);

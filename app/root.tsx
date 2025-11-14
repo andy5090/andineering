@@ -11,7 +11,7 @@ import {
 import type { Route } from "./+types/root";
 
 import "./app.css";
-import { auth } from "./lib/auth";
+import { auth } from "./lib/auth/server";
 import Navigation from "./common/components/navigation";
 
 export const links: Route.LinksFunction = () => [

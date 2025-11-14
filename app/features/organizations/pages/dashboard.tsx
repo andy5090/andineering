@@ -16,10 +16,10 @@ import {
   DialogContent,
   DialogTitle,
 } from "~/common/components/ui/dialog";
-import db from "~/db";
+import db from "~/lib/db";
 import { apiKeys, organizations, orgsToUsers } from "../schema";
 import { eq } from "drizzle-orm";
-import { auth } from "~/lib/auth";
+import { auth } from "~/lib/auth/server";
 import { Form, redirect } from "react-router";
 import z from "zod";
 import InputPair from "~/common/components/input-pair";
