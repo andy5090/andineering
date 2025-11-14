@@ -1,7 +1,7 @@
-import { bigint, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const agents = pgTable("agents", {
-  agent_id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
+  id: serial("id").primaryKey(),
   name: text().notNull(),
   description: text().notNull(),
   how_it_works: text().notNull(),

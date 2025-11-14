@@ -31,28 +31,23 @@ export const loader = async ({ request }) => {
     return redirect("/");
   }
 
-  const orgsToUsersData = await db
-    .select()
-    .from(orgsToUsers)
-    .where(eq(orgsToUsers.userId, session?.user.id ?? ""));
+  const userOrg = await db.query.orgsToUsers.findFirst({
+    where: eq(orgsToUsers.userId, session?.user.id ?? ""),
+  });
 
-  if (orgsToUsersData.length === 0) {
+  if (!userOrg) {
     return { organization: null };
   }
 
-  const organization = await db
-    .select()
-    .from(organizations)
-    .where(eq(organizations.id, orgsToUsersData[0].organizationId!))
-    .limit(1)
-    .then(([organization]) => organization ?? null);
+  const organization = await db.query.organizations.findFirst({
+    where: eq(organizations.id, userOrg.organizationId!),
+  });
 
-  const apiKeysData = await db
-    .select()
-    .from(apiKeys)
-    .where(eq(apiKeys.organization_id, organization?.id!));
+  const apiKeyList = await db.query.apiKeys.findMany({
+    where: eq(apiKeys.organizationId, organization?.id!),
+  });
 
-  return { organization, apiKeys: apiKeysData };
+  return { organization, apiKeys: apiKeyList };
 };
 
 const orgFormSchema = z.object({
@@ -99,8 +94,8 @@ export const action = async ({ request }: Route.ActionArgs) => {
     }),
     db.insert(apiKeys).values({
       name: "default",
-      organization_id: organization.id,
-      api_key: `kg_${organization.id}_${randomUUID()}`,
+      organizationId: organization.id,
+      apiKey: `kg_${organization.id}_${randomUUID()}`,
     }),
   ]);
 
@@ -224,7 +219,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
             <div className="space-y-4">
               {loaderData.apiKeys?.map((apiKey) => (
                 <div
-                  key={apiKey.api_key}
+                  key={apiKey.apiKey}
                   className="p-4 bg-muted/10 rounded-lg border border-border hover:border-primary/50 transition-all"
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -234,12 +229,12 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
                       </h3>
                       <div className="flex items-center gap-2 mb-2">
                         <code className="text-sm bg-muted px-2 py-1 rounded font-mono">
-                          {apiKey.api_key}
+                          {apiKey.apiKey}
                         </code>
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => copyToClipboard(apiKey.api_key)}
+                          onClick={() => copyToClipboard(apiKey.apiKey)}
                           className="h-8 w-8 p-0"
                         >
                           <Copy className="h-4 w-4" />
@@ -279,7 +274,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
                           {apiKey.name}
                         </h3>
                         <code className="text-sm bg-muted px-2 py-1 rounded font-mono mb-4">
-                          {apiKey.api_key}
+                          {apiKey.apiKey}
                         </code>
                         <Button onClick={() => onClickRevokeAPIKey(apiKey.id)}>
                           Revoke

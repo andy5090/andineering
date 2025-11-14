@@ -21,7 +21,7 @@ export const organizationsRouter = {
         .select()
         .from(apiKeys)
         .where(
-          eq(apiKeys.organization_id, organizationId) && eq(apiKeys.name, name)
+          eq(apiKeys.organizationId, organizationId) && eq(apiKeys.name, name)
         );
 
       if (apiKeysData.length > 0) {
@@ -34,8 +34,8 @@ export const organizationsRouter = {
         .insert(apiKeys)
         .values({
           name,
-          organization_id: organizationId,
-          api_key: `kg_${organizationId}_${randomUUID()}`,
+          apiKey: `kg_${organizationId}_${randomUUID()}`,
+          organizationId: organizationId,
         })
         .returning();
 
@@ -57,8 +57,7 @@ export const organizationsRouter = {
         .select()
         .from(apiKeys)
         .where(
-          eq(apiKeys.id, apiKeyId) &&
-            eq(apiKeys.organization_id, organizationId)
+          eq(apiKeys.id, apiKeyId) && eq(apiKeys.organizationId, organizationId)
         );
 
       if (!apiKey) {
