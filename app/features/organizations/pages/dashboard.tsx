@@ -19,6 +19,7 @@ import InputPair from "~/common/components/input-pair";
 import { randomUUID } from "crypto";
 import { useTRPC } from "~/lib/trpc/react";
 import { useMutation } from "@tanstack/react-query";
+import { useForm, type SubmitHandler } from "react-hook-form";
 
 export const loader = async ({ request }) => {
   const session = await auth.api.getSession({
@@ -125,26 +126,25 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
   const generateApiKey = useMutation(
     trpc.organizations.generateApiKey.mutationOptions({
       onSuccess: () => {
-        console.log("API key generated");
         setShowNewKeyDialog(false);
         revalidate();
       },
     })
   );
 
-  const [newAPIKeyName, setNewAPIKeyName] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof apiKeyFormSchema>>();
 
-  const onSubmitNewAPIKey = async () => {
-    if (!newAPIKeyName.trim()) {
-      return;
-    }
-
-    const result = await generateApiKey.mutate({
-      name: newAPIKeyName,
+  const onSubmitNewAPIKey: SubmitHandler<z.infer<typeof apiKeyFormSchema>> = (
+    data
+  ) => {
+    generateApiKey.mutate({
+      name: data.name,
       organizationId: organization?.id!,
     });
-
-    console.log(result);
   };
 
   const [showNewKeyDialog, setShowNewKeyDialog] = useState(false);
@@ -254,15 +254,19 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
           <Dialog open={showNewKeyDialog} onOpenChange={setShowNewKeyDialog}>
             <DialogContent>
               <DialogTitle>Add API Key</DialogTitle>
-              <Form className="space-y-4" onSubmit={onSubmitNewAPIKey}>
+              <Form
+                className="space-y-4"
+                onSubmit={handleSubmit(onSubmitNewAPIKey)}
+              >
                 <InputPair
-                  name="name"
                   label="Name"
                   description="The name of the API key"
-                  value={newAPIKeyName}
-                  onChange={(event) => setNewAPIKeyName(event.target.value)}
                   required
+                  {...register("name", { required: true })}
                 />
+                {errors.name && (
+                  <p className="text-red-500">{errors.name.message}</p>
+                )}
                 <Button type="submit">Add</Button>
               </Form>
             </DialogContent>
