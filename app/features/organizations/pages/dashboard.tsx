@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import Footer from "~/common/components/footer";
 import type { Route } from "./+types/dashboard";
-import { authMiddleware } from "~/middleware/auth";
 import {
   Dialog,
   DialogContent,
@@ -26,12 +25,14 @@ import z from "zod";
 import InputPair from "~/common/components/input-pair";
 import { randomUUID } from "crypto";
 
-export const middleware: Route.MiddlewareFunction[] = [authMiddleware];
-
 export const loader = async ({ request }) => {
   const session = await auth.api.getSession({
     headers: request.headers,
   });
+
+  if (!session?.user.id) {
+    return redirect("/");
+  }
 
   const orgsToUsersData = await db
     .select()
