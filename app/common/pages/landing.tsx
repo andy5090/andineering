@@ -24,7 +24,7 @@ const formSchema = z.object({
   message: z.string().min(1),
 });
 
-export const action = async ({ request }: { request: Request }) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const formData = await request.formData();
 
   const validatedFields = formSchema.safeParse(Object.fromEntries(formData));

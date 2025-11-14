@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  Copy,
-  Key,
-  TrendingUp,
-  Activity,
-  Clock,
-  CheckCircle2,
-} from "lucide-react";
+import { Copy, Key, TrendingUp, Activity } from "lucide-react";
 import Footer from "~/common/components/footer";
 import type { Route } from "./+types/dashboard";
 import {
@@ -20,10 +13,12 @@ import db from "~/lib/db";
 import { apiKeys, organizations, orgsToUsers } from "../schema";
 import { eq } from "drizzle-orm";
 import { auth } from "~/lib/auth/server";
-import { Form, redirect } from "react-router";
+import { Form, redirect, useRevalidator } from "react-router";
 import z from "zod";
 import InputPair from "~/common/components/input-pair";
 import { randomUUID } from "crypto";
+import { useTRPC } from "~/lib/trpc/react";
+import { useMutation } from "@tanstack/react-query";
 
 export const loader = async ({ request }) => {
   const session = await auth.api.getSession({
@@ -58,9 +53,13 @@ export const loader = async ({ request }) => {
   return { organization, apiKeys: apiKeysData };
 };
 
-const formSchema = z.object({
+const orgFormSchema = z.object({
   name: z.string("Name is required").min(1).max(255),
   description: z.string().optional(),
+});
+
+const apiKeyFormSchema = z.object({
+  name: z.string("Name is required").min(1).max(255),
 });
 
 export const action = async ({ request }: Route.ActionArgs) => {
@@ -73,7 +72,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   }
 
   const formData = await request.formData();
-  const { success, error, data } = formSchema.safeParse(
+  const { success, error, data } = orgFormSchema.safeParse(
     Object.fromEntries(formData)
   );
 
@@ -109,6 +108,8 @@ export const action = async ({ request }: Route.ActionArgs) => {
 };
 
 const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
+  const { revalidate } = useRevalidator();
+
   const { organization } = loaderData;
 
   const [openOrgDetailsDialog, setOpenOrgDetailsDialog] =
@@ -120,85 +121,39 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
     }
   }, [actionData]);
 
-  const [apiKeys, setApiKeys] = useState([
-    {
-      id: "1",
-      name: "Production API",
-      key: "kg_prod_••••••••••••3a8f",
-      created: "2025-01-15",
-      calls: 15420,
-    },
-    {
-      id: "2",
-      name: "Development API",
-      key: "kg_dev_••••••••••••7b2c",
-      created: "2025-01-20",
-      calls: 8934,
-    },
-  ]);
-  const [showNewKeyDialog, setShowNewKeyDialog] = useState(false);
-  const [newKeyName, setNewKeyName] = useState("");
+  const trpc = useTRPC();
+  const generateApiKey = useMutation(
+    trpc.organizations.generateApiKey.mutationOptions({
+      onSuccess: () => {
+        console.log("API key generated");
+        setShowNewKeyDialog(false);
+        revalidate();
+      },
+    })
+  );
 
-  const usageStats = [
-    {
-      label: "Total API Calls",
-      value: "24,354",
-      change: "+12.5%",
-      icon: Activity,
-    },
-    {
-      label: "Active Keys",
-      value: apiKeys.length.toString(),
-      change: "stable",
-      icon: Key,
-    },
-    {
-      label: "Avg Response Time",
-      value: "142ms",
-      change: "-8.2%",
-      icon: Clock,
-    },
-    {
-      label: "Success Rate",
-      value: "99.8%",
-      change: "+0.3%",
-      icon: CheckCircle2,
-    },
-  ];
+  const [newAPIKeyName, setNewAPIKeyName] = useState("");
+
+  const onSubmitNewAPIKey = async () => {
+    if (!newAPIKeyName.trim()) {
+      return;
+    }
+
+    const result = await generateApiKey.mutate({
+      name: newAPIKeyName,
+      organizationId: organization?.id!,
+    });
+
+    console.log(result);
+  };
+
+  const [showNewKeyDialog, setShowNewKeyDialog] = useState(false);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     // toast({
     //   title: "Copied to clipboard",
     //   description: "API key has been copied to your clipboard.",
-    // });
-  };
-
-  const generateApiKey = () => {
-    if (!newKeyName.trim()) {
-      //   toast({
-      //     title: "Error",
-      //     description: "Please enter a name for your API key.",
-      //     variant: "destructive",
-      //   });
-      return;
-    }
-
-    const newKey = {
-      id: Date.now().toString(),
-      name: newKeyName,
-      key: `kg_${newKeyName.toLowerCase().replace(/\s+/g, "_")}_${Math.random().toString(36).substring(2, 15)}`,
-      created: new Date().toISOString().split("T")[0],
-      calls: 0,
-    };
-
-    setApiKeys([...apiKeys, newKey]);
-    setNewKeyName("");
-    setShowNewKeyDialog(false);
-
-    // toast({
-    //   title: "API Key Generated",
-    //   description: "Your new API key has been created successfully.",
     // });
   };
 
@@ -299,11 +254,13 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
           <Dialog open={showNewKeyDialog} onOpenChange={setShowNewKeyDialog}>
             <DialogContent>
               <DialogTitle>Add API Key</DialogTitle>
-              <Form className="space-y-4" method="post">
+              <Form className="space-y-4" onSubmit={onSubmitNewAPIKey}>
                 <InputPair
                   name="name"
                   label="Name"
                   description="The name of the API key"
+                  value={newAPIKeyName}
+                  onChange={(event) => setNewAPIKeyName(event.target.value)}
                   required
                 />
                 <Button type="submit">Add</Button>
@@ -312,7 +269,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
           </Dialog>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {usageStats.map((stat, index) => {
               const Icon = stat.icon;
               return (
@@ -339,7 +296,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
                 </Card>
               );
             })}
-          </div>
+          </div> */}
 
           {/* Usage Chart Placeholder */}
           <Card className="p-6 mb-12 bg-card/50 backdrop-blur-sm border-border">

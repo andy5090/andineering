@@ -13,6 +13,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { auth } from "./lib/auth/server";
 import Navigation from "./common/components/navigation";
+import { TRPCReactProvider } from "./lib/trpc/react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -61,10 +62,10 @@ export default function App({ loaderData }: Route.ComponentProps) {
   const isLoggedIn = !!session;
 
   return (
-    <div>
+    <TRPCReactProvider>
       <Navigation isLoggedIn={isLoggedIn} />
       <Outlet context={{ isLoggedIn }} />
-    </div>
+    </TRPCReactProvider>
   );
 }
 
