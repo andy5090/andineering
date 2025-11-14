@@ -7,6 +7,7 @@ import type { Route } from "./+types/dashboard";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
 } from "~/common/components/ui/dialog";
 import db from "~/lib/db";
@@ -113,6 +114,8 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
 
   const { organization } = loaderData;
 
+  const [selectedApiKeyId, setSelectedApiKeyId] = useState<number | null>(null);
+  const [showNewKeyDialog, setShowNewKeyDialog] = useState(false);
   const [openOrgDetailsDialog, setOpenOrgDetailsDialog] =
     useState(!organization);
 
@@ -147,14 +150,24 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
     });
   };
 
-  const [showNewKeyDialog, setShowNewKeyDialog] = useState(false);
+  const revokeApiKey = useMutation(
+    trpc.organizations.revokeApiKey.mutationOptions({
+      onSuccess: () => {
+        setSelectedApiKeyId(null);
+        revalidate();
+      },
+    })
+  );
+
+  const onClickRevokeAPIKey = (apiKeyId: number) => {
+    revokeApiKey.mutate({
+      apiKeyId,
+      organizationId: organization?.id!,
+    });
+  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    // toast({
-    //   title: "Copied to clipboard",
-    //   description: "API key has been copied to your clipboard.",
-    // });
   };
 
   return (
@@ -241,10 +254,38 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
                       </div>
                     </div>
                     {apiKey.name !== "default" && (
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedApiKeyId(apiKey.id)}
+                      >
                         Revoke
                       </Button>
                     )}
+                    <Dialog
+                      open={selectedApiKeyId === apiKey.id}
+                      onOpenChange={(open) =>
+                        open
+                          ? setSelectedApiKeyId(apiKey.id)
+                          : setSelectedApiKeyId(null)
+                      }
+                    >
+                      <DialogContent>
+                        <DialogTitle>Revoke API Key</DialogTitle>
+                        <DialogDescription className="mb-4">
+                          Are you sure you want to revoke this API key?
+                        </DialogDescription>
+                        <h3 className="font-semibold text-lg text-center">
+                          {apiKey.name}
+                        </h3>
+                        <code className="text-sm bg-muted px-2 py-1 rounded font-mono mb-4">
+                          {apiKey.api_key}
+                        </code>
+                        <Button onClick={() => onClickRevokeAPIKey(apiKey.id)}>
+                          Revoke
+                        </Button>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               ))}
