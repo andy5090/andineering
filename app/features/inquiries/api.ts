@@ -3,6 +3,10 @@ import { inquiries } from "./schema";
 import type { TRPCRouterRecord } from "@trpc/server";
 import { publicProcedure } from "~/lib/trpc/trpc";
 import z from "zod";
+import axios from "axios";
+
+const DISCORD_WEBHOOK_URL =
+  "https://discord.com/api/webhooks/1158822981087272992/NXwpqJV7RbRCDzWAg-K0Zfm7-ITvBXqneVYMjeiFjfYnA7v-UjClpWNTyD5DV_Vn5Yhl";
 
 interface InquiryInput {
   name: string;
@@ -14,6 +18,13 @@ interface InquiryInput {
 export const submitInquiry = async (inquiry: InquiryInput) => {
   try {
     const newInquiry = await db.insert(inquiries).values(inquiry).returning();
+
+    await axios.post(DISCORD_WEBHOOK_URL, {
+      content: `New inquiry from ${inquiry.name}\n
+      Email: ${inquiry.email}\n
+      Phone: ${inquiry.phone}\n
+      Message: ${inquiry.message}`,
+    });
 
     return newInquiry[0];
   } catch (error) {
