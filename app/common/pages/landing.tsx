@@ -76,32 +76,42 @@ export default function Landing({
           {/* Content */}
           <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up py-16">
-              {/* Badge */}
-              <Badge variant={"outline"}>
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-muted-foreground">
-                  Agentic AI Solutions
-                </span>
-              </Badge>
-
               {/* Main headline */}
               <div>
                 <TextAnimate
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight"
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium leading-tight"
                   animation="blurInUp"
                   by="character"
                   once
                 >
-                  Your business
+                  DX를 넘어 AX를 준비중이신가요?
                 </TextAnimate>
-                <TextAnimate
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight"
+                <div className="flex justify-center items-center gap-2">
+                  <TextAnimate
+                    segmentClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight bg-clip-text bg-linear-135 from-sky-500 to-purple-600 text-transparent"
+                    animation="blurInUp"
+                    by="character"
+                    once
+                  >
+                    에이전틱 AI
+                  </TextAnimate>
+                  <TextAnimate
+                    segmentClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium leading-tight"
+                    animation="blurInUp"
+                    by="character"
+                    once
+                  >
+                    도입을 도와드립니다!
+                  </TextAnimate>
+                </div>
+                {/* <TextAnimate
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium leading-tight"
                   animation="blurInUp"
                   by="character"
                   once
                 >
-                  Powered by Agentic AI
-                </TextAnimate>
+                  고민하지말고 물어보세요!
+                </TextAnimate> */}
               </div>
 
               {/* Subheadline */}
@@ -162,9 +172,9 @@ export default function Landing({
             </div>
           </div>
         </section>
-        <Services />
+        {/* <Services />
         <Features />
-        <CTA />
+        <CTA /> */}
       </main>
       <Footer />
     </div>
