@@ -13,6 +13,9 @@ export const auth = betterAuth({
       verification,
     },
   }),
+  emailAndPassword: {
+    enabled: true,
+  },
   socialProviders: {
     google: {
       prompt: "select_account",
