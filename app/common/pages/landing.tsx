@@ -1,4 +1,4 @@
-import { submitInquiry } from "~/features/inquiries/api";
+import { submitInquiry } from "~/features/inquiries/trpc";
 import type { Route } from "../../common/pages/+types/landing";
 import Footer from "../components/footer";
 import z from "zod";

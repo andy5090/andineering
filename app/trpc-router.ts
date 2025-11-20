@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "~/lib/trpc/trpc";
-import { inquiriesRouter } from "./features/inquiries/api";
-import { organizationsRouter } from "./features/organizations/api";
+import { inquiriesRouter } from "./features/inquiries/trpc";
+import { organizationsRouter } from "./features/organizations/trpc";
 
 export const appRouter = createTRPCRouter({
   inquiries: inquiriesRouter,
