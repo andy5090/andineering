@@ -111,10 +111,19 @@ export default function Landing({
               </div>
 
               {/* Subheadline */}
-              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Move beyond digital transformation to agentic AI. Build
-                autonomous systems that think, act, and adapt—so you can focus
-                on what matters most.
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                Digital Transformation을 넘어 AI Transformation을
+                준비중이신가요?
+              </p>
+              <p className="text-lg sm:text-xl md:text-2xl max-w-4xl mx-auto">
+                AX의 핵심에는 Agentic AI가 있습니다.
+              </p>
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                Agentic AI는 기존 LLM 활용의 한계를 넘어 복잡한 워크플로우를
+                자동화하는 기술입니다.
+                <br />
+                Kagentic Solution은 Agentic AI를 도입하는 데 필요한 모든 것을
+                제공합니다.
               </p>
 
               {/* CTA Buttons */}
