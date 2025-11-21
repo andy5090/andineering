@@ -119,12 +119,9 @@ export default function Landing({
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                <Button size="lg" className="min-w-[200px]">
-                  Get started
+                <Button size="lg" className="min-w-[200px] bg-gradient-primary">
+                  에이전틱 AI 알아보기
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button size="lg" variant="outline" className="min-w-[200px]">
-                  Learn more
                 </Button>
               </div>
 
