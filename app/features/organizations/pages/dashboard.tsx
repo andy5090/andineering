@@ -24,7 +24,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import resend from "~/lib/resend";
 import { WelcomeEmail } from "react-email-starter/emails/welcome";
 
-const baseUrl = "https://kagentic-solution.vercel.app";
+const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:5173";
 
 export const loader = async ({ request }) => {
   const session = await auth.api.getSession({
@@ -108,7 +108,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
       react: (
         <WelcomeEmail
           username={session.user.name}
-          buttonLink={`${baseUrl}/agentic`}
+          buttonLink={`${baseUrl}`}
         />
       ),
     }),
