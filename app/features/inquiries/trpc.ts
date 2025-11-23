@@ -1,7 +1,7 @@
 import db from "~/lib/db";
 import { inquiries } from "./schema";
 import type { TRPCRouterRecord } from "@trpc/server";
-import { publicProcedure } from "~/lib/trpc/trpc";
+import { protectedProcedure } from "~/lib/trpc/trpc";
 import z from "zod";
 import axios from "axios";
 
@@ -15,7 +15,7 @@ interface InquiryInput {
   message: string;
 }
 
-export const submitInquiry = async (inquiry: InquiryInput) => {
+const submitInquiry = async (inquiry: InquiryInput) => {
   try {
     const newInquiry = await db.insert(inquiries).values(inquiry).returning();
 
@@ -36,7 +36,7 @@ export const submitInquiry = async (inquiry: InquiryInput) => {
 };
 
 export const inquiriesRouter = {
-  submitInquiry: publicProcedure
+  submitInquiry: protectedProcedure
     .input(
       z.object({
         name: z.string(),
