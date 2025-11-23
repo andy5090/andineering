@@ -81,19 +81,28 @@ export default function Landing({
           </div>
 
           {/* Content */}
-          <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up py-16">
-              {/* Main headline */}
-              <div>
-                <TextAnimate
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium leading-tight"
-                  animation="blurInUp"
-                  by="character"
-                  once
-                >
-                  DX를 넘어 AX를 준비중이신가요?
-                </TextAnimate>
-                <div className="flex justify-center items-center gap-2">
+          <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-[1500px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-24 py-16">
+              {/* Left Column: Text Content */}
+              <div className="flex-1 space-y-8 text-center lg:text-left animate-fade-in-up">
+                {/* Main headline */}
+                <div>
+                  <TextAnimate
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-medium leading-tight"
+                    animation="blurInUp"
+                    by="character"
+                    once
+                  >
+                    DX를 넘어 AX를
+                  </TextAnimate>
+                  <TextAnimate
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-medium leading-tight"
+                    animation="blurInUp"
+                    by="character"
+                    once
+                  >
+                    준비중이신가요?
+                  </TextAnimate>
                   <TextAnimate
                     segmentClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight bg-clip-text bg-linear-135 from-sky-500 to-purple-600 text-transparent"
                     animation="blurInUp"
@@ -103,7 +112,7 @@ export default function Landing({
                     에이전틱 AI
                   </TextAnimate>
                   <TextAnimate
-                    segmentClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium leading-tight"
+                    segmentClassName="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-medium leading-tight"
                     animation="blurInUp"
                     by="character"
                     once
@@ -111,79 +120,84 @@ export default function Landing({
                     도입을 도와드립니다!
                   </TextAnimate>
                 </div>
-                {/* <TextAnimate
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium leading-tight"
-                  animation="blurInUp"
-                  by="character"
-                  once
-                >
-                  고민하지말고 물어보세요!
-                </TextAnimate> */}
-              </div>
 
-              {/* Subheadline */}
-              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                Digital Transformation을 넘어 AI Transformation을
-                준비중이신가요?
-              </p>
-              <p className="text-lg sm:text-xl md:text-2xl max-w-4xl mx-auto">
-                AX의 핵심에는 Agentic AI가 있습니다.
-              </p>
-              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                Agentic AI는 기존 LLM 활용의 한계를 넘어 복잡한 워크플로우를
-                자동화하는 기술입니다.
-                <br />
-                Kagentic Solution은 Agentic AI를 도입하는 데 필요한 모든 것을
-                제공합니다.
-              </p>
+                {/* Subheadline */}
+                <div className="space-y-4 px-6 md:px-0">
+                  <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground leading-relaxed break-keep">
+                    Digital Transformation을 넘어 AI Transformation을
+                    준비중이신가요?
+                  </p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-medium break-keep">
+                    AX의 핵심에는 Agentic AI가 있습니다.
+                  </p>
+                  <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground leading-relaxed break-keep">
+                    Agentic AI는 기존 LLM 활용의 한계를 넘어 복잡한 워크플로우를
+                    자동화하는 기술입니다.
+                    <br className="hidden lg:block" />
+                    Andineering은 Agentic AI를 도입하는 데 필요한 모든 것을
+                    제공합니다.
+                  </p>
+                </div>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                <Button size="lg" className="min-w-[200px] bg-gradient-primary">
-                  에이전틱 AI 알아보기
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </div>
-
-              {/* Inquiry Form only for logged in user */}
-              <div className="max-w-3xl mx-auto relative py-12 px-24 rounded-lg border border-border/50">
-                {!isLoggedIn && (
-                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/20 backdrop-blur-sm ">
-                    <div className="p-6 text-center space-y-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                        <Lock className="w-6 h-6 text-primary" />
-                      </div>
-                      <h3 className="text-xl font-semibold">
-                        로그인이 필요한 서비스입니다
-                      </h3>
-                      <p className="text-muted-foreground max-w-xs mx-auto">
-                        문의를 남기시려면 로그인이 필요합니다.
-                      </p>
-                      <Button onClick={() => signIn()} size="lg">
-                        로그인하고 문의하기
-                      </Button>
-                    </div>
-                  </div>
-                )}
-                <Form
-                  ref={formRef}
-                  className={`space-y-4 ${!isLoggedIn ? "opacity-50 pointer-events-none" : ""}`}
-                  method="post"
-                >
-                  <h3 className="text-2xl font-semibold">
-                    문의하기
-                  </h3>
-                  <Input name="name" type="text" placeholder="이름" />
-                  <Input name="email" type="email" placeholder="이메일" />
-                  <Textarea className="min-h-[150px]" name="message" placeholder="문의내용" />
-                  <Button className="min-w-[200px]" type="submit" disabled={!isLoggedIn}>
-                    문의 등록
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                  <Button size="lg" className="min-w-[200px] bg-gradient-primary">
+                    에이전틱 AI 알아보기
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                </Form>
+                </div>
               </div>
 
-              {/* Stats */}
-              {/* <div className="grid grid-cols-3 gap-8 pt-12 max-w-3xl mx-auto">
+              {/* Right Column: Inquiry Form */}
+              <div className="flex-1 w-full max-w-xl md:max-w-none">
+                <div className="relative py-8 px-6 sm:px-10 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm shadow-lg">
+                  {!isLoggedIn && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/60 backdrop-blur-md rounded-2xl">
+                      <div className="p-6 text-center space-y-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                          <Lock className="w-6 h-6 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-semibold">
+                          로그인이 필요한 서비스입니다
+                        </h3>
+                        <p className="text-muted-foreground max-w-xs mx-auto">
+                          문의를 남기시려면 로그인이 필요합니다.
+                        </p>
+                        <Button onClick={() => signIn()} size="lg">
+                          로그인하고 문의하기
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  <Form
+                    ref={formRef}
+                    className={`space-y-6 ${!isLoggedIn ? "opacity-50 pointer-events-none" : ""}`}
+                    method="post"
+                  >
+                    <div className="space-y-2 text-center lg:text-left">
+                      <h3 className="text-2xl font-semibold">
+                        문의하기
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        궁금한 점이 있으시면 언제든 문의해주세요.
+                      </p>
+                    </div>
+                    <div className="space-y-4">
+                      <Input name="name" type="text" placeholder="이름" className="bg-background/50" />
+                      <Input name="email" type="email" placeholder="이메일" className="bg-background/50" />
+                      <Textarea className="min-h-[150px] bg-background/50" name="message" placeholder="문의내용을 자세히 적어주세요" />
+                    </div>
+                    <Button className="w-full" size="lg" type="submit" disabled={!isLoggedIn}>
+                      문의 등록하기
+                    </Button>
+                  </Form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          {/* <div className="grid grid-cols-3 gap-8 pt-12 max-w-3xl mx-auto">
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-display font-bold text-primary">
                 100+
@@ -209,14 +223,13 @@ export default function Landing({
               </div>
             </div>
           </div> */}
-            </div>
-          </div>
-        </section>
+
+        </section >
         {/* <Services />
         <Features />
         <CTA /> */}
-      </main>
+      </main >
       <Footer />
-    </div>
+    </div >
   );
 }
