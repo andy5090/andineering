@@ -5,10 +5,11 @@ import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Lock } from "lucide-react";
 import { TextAnimate } from "@/components/ui/text-animate";
-import { Form } from "react-router";
+import { Form, useOutletContext } from "react-router";
 import { useEffect, useRef } from "react";
+import { signIn } from "~/lib/auth/client";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -48,6 +49,7 @@ export default function Landing({
   actionData,
 }: Route.ComponentProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const { isLoggedIn } = useOutletContext<{ isLoggedIn: boolean }>();
 
   useEffect(() => {
     if (actionData?.success && formRef.current) {
@@ -134,13 +136,40 @@ export default function Landing({
                 </Button>
               </div>
 
-              {/* Inquiry Form */}
-              <div className="max-w-3xl mx-auto">
-                <Form ref={formRef} className="space-y-4" method="post">
-                  <Input name="name" type="text" placeholder="Name" />
-                  <Input name="email" type="email" placeholder="Email" />
-                  <Textarea name="message" placeholder="Message" />
-                  <Button type="submit">Ask anything</Button>
+              {/* Inquiry Form only for logged in user */}
+              <div className="max-w-3xl mx-auto relative py-12 px-24 rounded-lg border border-border/50">
+                {!isLoggedIn && (
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/20 backdrop-blur-sm ">
+                    <div className="p-6 text-center space-y-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                        <Lock className="w-6 h-6 text-primary" />
+                      </div>
+                      <h3 className="text-xl font-semibold">
+                        로그인이 필요한 서비스입니다
+                      </h3>
+                      <p className="text-muted-foreground max-w-xs mx-auto">
+                        문의를 남기시려면 로그인이 필요합니다.
+                      </p>
+                      <Button onClick={() => signIn()} size="lg">
+                        로그인하고 문의하기
+                      </Button>
+                    </div>
+                  </div>
+                )}                
+                <Form
+                  ref={formRef}
+                  className={`space-y-4 ${!isLoggedIn ? "opacity-50 pointer-events-none" : ""}`}
+                  method="post"
+                >              
+                <h3 className="text-2xl font-semibold">
+                  문의하기  
+                </h3>
+                  <Input name="name" type="text" placeholder="이름" />
+                  <Input name="email" type="email" placeholder="이메일" />
+                  <Textarea className="min-h-[150px]" name="message" placeholder="문의내용" />
+                  <Button className="min-w-[200px]" type="submit" disabled={!isLoggedIn}>
+                    문의 등록
+                  </Button>
                 </Form>
               </div>
 
