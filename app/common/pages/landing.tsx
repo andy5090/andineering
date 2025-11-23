@@ -1,4 +1,5 @@
-import { submitInquiry } from "~/features/inquiries/trpc";
+import { appRouter } from "~/trpc-router";
+import { createCallerFactory, createTRPCContext } from "~/lib/trpc/trpc";
 import type { Route } from "../../common/pages/+types/landing";
 import Footer from "../components/footer";
 import z from "zod";
@@ -11,7 +12,7 @@ import { Form, useOutletContext } from "react-router";
 import { useEffect, useRef } from "react";
 import { signIn } from "~/lib/auth/client";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Kagentic Solution" },
     {
@@ -39,7 +40,15 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   const { name, email, message } = validatedFields.data;
 
-  await submitInquiry({ name, email, message });
+  const context = await createTRPCContext({ headers: request.headers });
+  const createCaller = createCallerFactory(appRouter);
+  const caller = createCaller(context);
+
+  await caller.inquiries.submitInquiry({
+    name,
+    email,
+    message,
+  });
 
   return { success: true };
 };
@@ -155,15 +164,15 @@ export default function Landing({
                       </Button>
                     </div>
                   </div>
-                )}                
+                )}
                 <Form
                   ref={formRef}
                   className={`space-y-4 ${!isLoggedIn ? "opacity-50 pointer-events-none" : ""}`}
                   method="post"
-                >              
-                <h3 className="text-2xl font-semibold">
-                  문의하기  
-                </h3>
+                >
+                  <h3 className="text-2xl font-semibold">
+                    문의하기
+                  </h3>
                   <Input name="name" type="text" placeholder="이름" />
                   <Input name="email" type="email" placeholder="이메일" />
                   <Textarea className="min-h-[150px]" name="message" placeholder="문의내용" />
