@@ -1,12 +1,27 @@
-import { Github, Linkedin } from "lucide-react";
+import { Linkedin } from "lucide-react";
+import { Link } from "react-router";
 import threadsIcon from "~/../public/assets/threads-logo-white.svg";
 
 const Footer = () => {
   const footerLinks = {
-    Product: ["Features", "Solutions", "Pricing", "API Docs"],
-    Company: ["About", "Blog", "Careers", "Contact"],
-    Resources: ["Documentation", "Guides", "Support", "Status"],
-    Legal: ["Privacy", "Terms", "Security", "Compliance"],
+    제품: [
+      { label: "기능", href: "/agentic-ai" },
+      { label: "솔루션", href: "/agentic-ai" },
+      { label: "가격", href: "/#pricing" },
+      { label: "API 문서", href: "/#api-docs" },
+    ],
+    회사: [
+      { label: "소개", href: "/#about" },
+      { label: "블로그", href: "/#blog" },
+      { label: "채용", href: "/#careers" },
+      { label: "문의하기", href: "/#contact" },
+    ],
+    리소스: [
+      { label: "문서", href: "/#docs" },
+      { label: "가이드", href: "/#guides" },
+      { label: "지원", href: "/#support" },
+      { label: "상태", href: "/#status" },
+    ],
   };
 
   return (
@@ -15,9 +30,11 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1 space-y-4 text-left">
-            <h3 className="text-xl font-display font-bold bg-gradient-primary bg-clip-text ">
-              Andineering
-            </h3>
+            <Link to="/">
+              <h3 className="text-xl font-display font-bold bg-gradient-primary bg-clip-text ">
+                Andineering
+              </h3>
+            </Link>
             <p className="text-sm text-muted-foreground">
               Agentic AI 솔루션으로
               <br />
@@ -25,26 +42,21 @@ const Footer = () => {
             </p>
             <div className="flex items-center gap-3">
               <a
-                href="#"
+                href="https://threads.net/@andineering"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-card hover:bg-card/80 border border-border hover:border-primary/50 transition-colors"
-                aria-label="Twitter"
-              >
-                <img src={threadsIcon} className="w-4 h-4" />
+                aria-label="Threads">
+                <img src={threadsIcon} className="w-4 h-4" alt="Threads" />
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/andydklee/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-card hover:bg-card/80 border border-border hover:border-primary/50 transition-colors"
-                aria-label="LinkedIn"
-              >
+                aria-label="LinkedIn">
                 <Linkedin className="w-4 h-4" />
               </a>
-              {/* <a
-                href="#"
-                className="p-2 rounded-lg bg-card hover:bg-card/80 border border-border hover:border-primary/50 transition-colors"
-                aria-label="GitHub"
-              >
-                <Github className="w-4 h-4" />
-              </a> */}
             </div>
           </div>
 
@@ -54,13 +66,20 @@ const Footer = () => {
               <h4 className="text-sm font-semibold">{category}</h4>
               <ul className="space-y-2">
                 {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {link}
-                    </a>
+                  <li key={link.label}>
+                    {link.href.startsWith("/") ? (
+                      <Link
+                        to={link.href}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -74,12 +93,16 @@ const Footer = () => {
             © 2025 Andineering. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="hover:text-foreground transition-colors">
-              Terms of Service
-            </a>
+            <Link
+              to="/privacy"
+              className="hover:text-foreground transition-colors">
+              개인정보처리방침
+            </Link>
+            <Link
+              to="/terms"
+              className="hover:text-foreground transition-colors">
+              이용약관
+            </Link>
           </div>
         </div>
       </div>
