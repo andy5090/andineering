@@ -9,6 +9,7 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   const navItems = [
     // { label: "Services", href: "#services" },
+    { label: "Agentic AI", href: "/agentic-ai" },
     { label: "Agents", href: "/agents" },
     { label: "About", href: "/" },
   ];
@@ -37,9 +38,9 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a key={item.label} href={item.href}>
+              <Link key={item.label} to={item.href} className="hover:text-primary transition-colors">
                 {item.label}
-              </a>
+              </Link>
             ))}
             <div className="hidden md:flex items-center space-x-2">
               {isLoggedIn && (
@@ -75,19 +76,19 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+          {/* Mobile Navigation */}
       {isOpen && (
         <div className="md:hidden bg-card border-t border-border animate-fade-in">
           <div className="px-4 pt-2 pb-4 space-y-2">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.label}
-                href={item.href}
+                to={item.href}
                 className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
             <Button
               className="w-full mt-4 bg-gradient-primary text-primary-foreground font-semibold cursor-pointer"

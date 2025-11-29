@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowRight, Lock } from "lucide-react";
 import { TextAnimate } from "@/components/ui/text-animate";
-import { Form, useOutletContext } from "react-router";
+import { Form, Link, useOutletContext } from "react-router";
 import { useEffect, useRef } from "react";
 import { signIn } from "~/lib/auth/client";
 
@@ -141,9 +141,11 @@ export default function Landing({
 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                  <Button size="lg" className="min-w-[200px] bg-gradient-primary">
-                    에이전틱 AI 알아보기
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  <Button size="lg" className="min-w-[200px] bg-gradient-primary" asChild>
+                    <Link to="/agentic-ai">
+                      에이전틱 AI 알아보기
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
                   </Button>
                 </div>
               </div>
