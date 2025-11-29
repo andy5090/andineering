@@ -10,7 +10,7 @@ import { ArrowRight, Lock } from "lucide-react";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { Form, Link, useOutletContext } from "react-router";
 import { useEffect, useRef } from "react";
-import { signIn } from "~/lib/auth/client";
+import { signInGoogle } from "~/lib/auth/client";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -163,7 +163,7 @@ export default function Landing({
                         <p className="text-muted-foreground max-w-xs mx-auto">
                           문의를 남기시려면 로그인이 필요합니다.
                         </p>
-                        <Button onClick={() => signIn()} size="lg">
+                        <Button onClick={() => signInGoogle()} size="lg">
                           로그인하고 문의하기
                         </Button>
                       </div>

@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router";
 import { useState } from "react";
-import { signIn, signOut } from "~/lib/auth/client";
+import { signOut } from "~/lib/auth/client";
+import { LoginDialog } from "./login-dialog";
 
 const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
   const navItems = [
     // { label: "Services", href: "#services" },
@@ -17,7 +19,7 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     if (isLoggedIn) {
       await signOut();
     } else {
-      await signIn();
+      setIsLoginDialogOpen(true);
     }
   };
 
@@ -47,14 +49,14 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             <div className="hidden md:flex items-center space-x-2">
               {isLoggedIn && (
                 <Button asChild>
-                  <Link to="/dashboard">Dashboard</Link>
+                  <Link to="/dashboard">대시보드</Link>
                 </Button>
               )}
               <Button
                 className="cursor-pointer"
                 variant={"outline"}
                 onClick={handleLogInOut}>
-                {isLoggedIn ? "Logout" : "Login"}
+                {isLoggedIn ? "로그아웃" : "로그인"}
               </Button>
             </div>
           </div>
@@ -97,6 +99,11 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           </div>
         </div>
       )}
+
+      <LoginDialog
+        open={isLoginDialogOpen}
+        onOpenChange={setIsLoginDialogOpen}
+      />
     </nav>
   );
 };
