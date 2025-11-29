@@ -12,7 +12,7 @@ import { Form, Link, useOutletContext } from "react-router";
 import { useEffect, useRef } from "react";
 import { signIn } from "~/lib/auth/client";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Kagentic Solution" },
     {
@@ -76,8 +76,7 @@ export default function Landing({
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float"></div>
             <div
               className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-float"
-              style={{ animationDelay: "3s" }}
-            ></div>
+              style={{ animationDelay: "3s" }}></div>
           </div>
 
           {/* Content */}
@@ -91,32 +90,28 @@ export default function Landing({
                     className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-medium leading-tight"
                     animation="blurInUp"
                     by="character"
-                    once
-                  >
+                    once>
                     DX를 넘어 AX를
                   </TextAnimate>
                   <TextAnimate
                     className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-medium leading-tight"
                     animation="blurInUp"
                     by="character"
-                    once
-                  >
+                    once>
                     준비중이신가요?
                   </TextAnimate>
                   <TextAnimate
                     segmentClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight bg-clip-text bg-linear-135 from-sky-500 to-purple-600 text-transparent"
                     animation="blurInUp"
                     by="character"
-                    once
-                  >
+                    once>
                     에이전틱 AI
                   </TextAnimate>
                   <TextAnimate
                     segmentClassName="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-medium leading-tight"
                     animation="blurInUp"
                     by="character"
-                    once
-                  >
+                    once>
                     도입을 도와드립니다!
                   </TextAnimate>
                 </div>
@@ -141,9 +136,12 @@ export default function Landing({
 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                  <Button size="lg" className="min-w-[200px] bg-gradient-primary" asChild>
-                    <Link to="/agentic-ai">
-                      에이전틱 AI 알아보기
+                  <Button
+                    size="lg"
+                    className="min-w-[200px] bg-gradient-primary"
+                    asChild>
+                    <Link to="/agents">
+                      에이전틱 AI 사용해보기
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </Button>
@@ -174,22 +172,37 @@ export default function Landing({
                   <Form
                     ref={formRef}
                     className={`space-y-6 ${!isLoggedIn ? "opacity-50 pointer-events-none" : ""}`}
-                    method="post"
-                  >
+                    method="post">
                     <div className="space-y-2 text-center lg:text-left">
-                      <h3 className="text-2xl font-semibold">
-                        문의하기
-                      </h3>
+                      <h3 className="text-2xl font-semibold">문의하기</h3>
                       <p className="text-sm text-muted-foreground">
                         궁금한 점이 있으시면 언제든 문의해주세요.
                       </p>
                     </div>
                     <div className="space-y-4">
-                      <Input name="name" type="text" placeholder="이름" className="bg-background/50" />
-                      <Input name="email" type="email" placeholder="이메일" className="bg-background/50" />
-                      <Textarea className="min-h-[150px] bg-background/50" name="message" placeholder="문의내용을 자세히 적어주세요" />
+                      <Input
+                        name="name"
+                        type="text"
+                        placeholder="이름"
+                        className="bg-background/50"
+                      />
+                      <Input
+                        name="email"
+                        type="email"
+                        placeholder="이메일"
+                        className="bg-background/50"
+                      />
+                      <Textarea
+                        className="min-h-[150px] bg-background/50"
+                        name="message"
+                        placeholder="문의내용을 자세히 적어주세요"
+                      />
                     </div>
-                    <Button className="w-full" size="lg" type="submit" disabled={!isLoggedIn}>
+                    <Button
+                      className="w-full"
+                      size="lg"
+                      type="submit"
+                      disabled={!isLoggedIn}>
                       문의 등록하기
                     </Button>
                   </Form>
@@ -225,13 +238,12 @@ export default function Landing({
               </div>
             </div>
           </div> */}
-
-        </section >
+        </section>
         {/* <Services />
         <Features />
         <CTA /> */}
-      </main >
+      </main>
       <Footer />
-    </div >
+    </div>
   );
 }
