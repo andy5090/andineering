@@ -1,4 +1,3 @@
-import Navigation from "~/common/components/navigation";
 import Footer from "~/common/components/footer";
 import {
   Card,
@@ -9,133 +8,18 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Bot,
-  Brain,
-  FileText,
-  ShoppingCart,
-  LineChart,
-  Mail,
-  Database,
-  Shield,
-} from "lucide-react";
+import { Bot } from "lucide-react";
+import db from "~/lib/db";
+import { agents } from "../schema";
+import type { Route } from "./+types/agents-list";
 
-const agentsData = [
-  {
-    icon: Brain,
-    name: "Cognitive Assistant",
-    category: "AI Reasoning",
-    description:
-      "Advanced reasoning agent for complex decision-making and problem-solving tasks.",
-    capabilities: [
-      "Multi-step reasoning",
-      "Context awareness",
-      "Decision trees",
-      "Logic processing",
-    ],
-    pricing: "Enterprise",
-  },
-  {
-    icon: FileText,
-    name: "Document Processor",
-    category: "Data Processing",
-    description:
-      "Intelligent document analysis, extraction, and summarization agent.",
-    capabilities: [
-      "OCR & extraction",
-      "Smart summarization",
-      "Multi-format support",
-      "Data validation",
-    ],
-    pricing: "Pro",
-  },
-  {
-    icon: ShoppingCart,
-    name: "E-commerce Agent",
-    category: "Business",
-    description:
-      "Automated product recommendations, inventory management, and customer insights.",
-    capabilities: [
-      "Product matching",
-      "Inventory tracking",
-      "Price optimization",
-      "Customer analytics",
-    ],
-    pricing: "Pro",
-  },
-  {
-    icon: LineChart,
-    name: "Analytics Agent",
-    category: "Data Science",
-    description:
-      "Real-time data analysis, predictive modeling, and business intelligence.",
-    capabilities: [
-      "Pattern detection",
-      "Forecasting",
-      "Anomaly detection",
-      "Custom metrics",
-    ],
-    pricing: "Enterprise",
-  },
-  {
-    icon: Mail,
-    name: "Communication Agent",
-    category: "Automation",
-    description:
-      "Smart email handling, response generation, and communication workflows.",
-    capabilities: [
-      "Email classification",
-      "Auto-responses",
-      "Sentiment analysis",
-      "Priority routing",
-    ],
-    pricing: "Starter",
-  },
-  {
-    icon: Database,
-    name: "Data Integration Agent",
-    category: "Infrastructure",
-    description:
-      "Seamless data synchronization across multiple platforms and databases.",
-    capabilities: [
-      "Real-time sync",
-      "Data transformation",
-      "API orchestration",
-      "Error handling",
-    ],
-    pricing: "Pro",
-  },
-  {
-    icon: Shield,
-    name: "Security Agent",
-    category: "Security",
-    description:
-      "Threat detection, compliance monitoring, and automated security responses.",
-    capabilities: [
-      "Threat detection",
-      "Compliance checks",
-      "Incident response",
-      "Access control",
-    ],
-    pricing: "Enterprise",
-  },
-  {
-    icon: Bot,
-    name: "Custom Agent Builder",
-    category: "Custom",
-    description:
-      "Build and deploy your own specialized agents tailored to your specific needs.",
-    capabilities: [
-      "No-code builder",
-      "Custom workflows",
-      "Integration ready",
-      "Scalable deployment",
-    ],
-    pricing: "Contact",
-  },
-];
+export const loader = async () => {
+  const agentsList = await db.select().from(agents);
+  return { agents: agentsList };
+};
 
-const AgentsAPI = () => {
+const AgentsAPI = ({ loaderData }: Route.ComponentProps) => {
+  const { agents: agentsList } = loaderData;
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="pt-24 pb-16">
@@ -143,24 +27,23 @@ const AgentsAPI = () => {
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           <div className="text-center max-w-4xl mx-auto animate-fade-in-up">
             <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
-              Multi-Agent API Suite
+              멀티 에이전트 API 스위트
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 bg-gradient-primary bg-clip-text">
-              Pre-Built AI Agents
+              사전 구축된 AI 에이전트
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8">
-              Deploy production-ready AI agents in minutes. Choose from our
-              curated collection of specialized agents or build your own.
+              몇 분 안에 프로덕션 준비가 완료된 AI 에이전트를 배포하세요. 엄선된 전문 에이전트 컬렉션에서 선택하거나 직접 구축하세요.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button
                 size="lg"
                 className="bg-gradient-primary text-primary-foreground"
               >
-                View Documentation
+                문서 보기
               </Button>
               <Button size="lg" variant="outline">
-                Request Demo
+                데모 요청
               </Button>
             </div>
           </div>
@@ -168,22 +51,25 @@ const AgentsAPI = () => {
 
         {/* Agents Grid */}
         <section className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {agentsData.map((agent, index) => {
-              const Icon = agent.icon;
-              return (
+          {!agentsList || agentsList.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground">현재 사용 가능한 에이전트가 없습니다.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {agentsList.map((agent, index) => (
                 <Card
-                  key={agent.name}
+                  key={agent.id}
                   className="group hover:border-primary/50 transition-all duration-300 hover:shadow-glow animate-fade-in-up bg-card/50 backdrop-blur-sm"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between mb-4">
                       <div className="p-3 rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-300">
-                        <Icon className="w-6 h-6" />
+                        <Bot className="w-6 h-6" />
                       </div>
                       <Badge variant="secondary" className="text-xs">
-                        {agent.category}
+                        {agent.credit_cost} 크레딧
                       </Badge>
                     </div>
                     <CardTitle className="text-xl font-display">
@@ -197,38 +83,30 @@ const AgentsAPI = () => {
                     <div className="space-y-4">
                       <div>
                         <h4 className="text-sm font-semibold mb-2 text-foreground">
-                          Key Capabilities
+                          작동 방식
                         </h4>
-                        <ul className="space-y-1">
-                          {agent.capabilities.map((capability) => (
-                            <li
-                              key={capability}
-                              className="text-sm text-muted-foreground flex items-center"
-                            >
-                              <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
-                              {capability}
-                            </li>
-                          ))}
-                        </ul>
+                        <p className="text-sm text-muted-foreground">
+                          {agent.how_it_works}
+                        </p>
                       </div>
                       <div className="pt-4 border-t border-border flex items-center justify-between">
-                        <span className="text-sm font-semibold text-primary">
-                          {agent.pricing}
+                        <span className="text-sm text-muted-foreground font-mono">
+                          {agent.endpoint}
                         </span>
                         <Button
                           variant="ghost"
                           size="sm"
                           className="group-hover:text-primary"
                         >
-                          Learn More →
+                          지금 시도 →
                         </Button>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* CTA Section */}
@@ -238,18 +116,17 @@ const AgentsAPI = () => {
             <CardContent className="p-8 md:p-12 relative z-10">
               <div className="max-w-3xl mx-auto text-center">
                 <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-                  Need a Custom Agent?
+                  맞춤형 에이전트가 필요하신가요?
                 </h2>
                 <p className="text-lg mb-8 text-primary-foreground/90">
-                  Our team can build specialized agents tailored to your unique
-                  business requirements.
+                  저희 팀이 귀하의 고유한 비즈니스 요구사항에 맞춘 전문 에이전트를 구축해드립니다.
                 </p>
                 <Button
                   size="lg"
                   variant="secondary"
                   className="bg-background text-foreground hover:bg-background/90"
                 >
-                  Contact Our Team
+                  팀에 문의하기
                 </Button>
               </div>
             </CardContent>

@@ -1,0 +1,1 @@
+ALTER TABLE "agents" ADD COLUMN "credit_cost" integer DEFAULT 1 NOT NULL;
