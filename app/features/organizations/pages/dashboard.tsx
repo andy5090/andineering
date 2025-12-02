@@ -24,7 +24,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import resend from "~/lib/resend";
 import { WelcomeEmail } from "react-email-starter/emails/welcome";
 
-const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:5173";
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:5173";
 
 export const loader = async ({ request }) => {
   const session = await auth.api.getSession({
@@ -106,10 +108,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
       to: session.user.email,
       subject: "Welcome to Andineering",
       react: (
-        <WelcomeEmail
-          username={session.user.name}
-          buttonLink={`${baseUrl}`}
-        />
+        <WelcomeEmail username={session.user.name} buttonLink={`${baseUrl}`} />
       ),
     }),
   ]);
@@ -224,10 +223,10 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
           {/* API Keys Management */}
           <Card className="p-6 bg-card/50 backdrop-blur-sm border-border mb-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">API Keys</h2>
+              <h2 className="text-2xl font-bold">API 키 관리</h2>
               <Button onClick={() => setShowNewKeyDialog(!showNewKeyDialog)}>
                 <Key className="mr-2 h-4 w-4" />
-                Generate New Key
+                새로운 API 키 생성
               </Button>
             </div>
 
@@ -235,8 +234,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
               {loaderData.apiKeys?.map((apiKey) => (
                 <div
                   key={apiKey.apiKey}
-                  className="p-4 bg-muted/10 rounded-lg border border-border hover:border-primary/50 transition-all"
-                >
+                  className="p-4 bg-muted/10 rounded-lg border border-border hover:border-primary/50 transition-all">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg mb-1 text-left">
@@ -250,8 +248,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
                           size="sm"
                           variant="ghost"
                           onClick={() => copyToClipboard(apiKey.apiKey)}
-                          className="h-8 w-8 p-0"
-                        >
+                          className="h-8 w-8 p-0">
                           <Copy className="h-4 w-4" />
                         </Button>
                       </div>
@@ -267,8 +264,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setSelectedApiKeyId(apiKey.id)}
-                      >
+                        onClick={() => setSelectedApiKeyId(apiKey.id)}>
                         Revoke
                       </Button>
                     )}
@@ -278,8 +274,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
                         open
                           ? setSelectedApiKeyId(apiKey.id)
                           : setSelectedApiKeyId(null)
-                      }
-                    >
+                      }>
                       <DialogContent>
                         <DialogTitle>Revoke API Key</DialogTitle>
                         <DialogDescription className="mb-4">
@@ -307,8 +302,7 @@ const Dashboard = ({ loaderData, actionData }: Route.ComponentProps) => {
               <DialogTitle>Add API Key</DialogTitle>
               <Form
                 className="space-y-4"
-                onSubmit={handleSubmit(onSubmitNewAPIKey)}
-              >
+                onSubmit={handleSubmit(onSubmitNewAPIKey)}>
                 <InputPair
                   label="Name"
                   description="The name of the API key"
