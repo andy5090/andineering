@@ -91,11 +91,24 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                 {item.label}
               </Link>
             ))}
-            <Button
-              className="w-full mt-4 bg-gradient-primary text-primary-foreground font-semibold cursor-pointer"
-              asChild>
-              <Link to="/dashboard">Get Started</Link>
-            </Button>
+            <div className="flex flex-col space-y-2 mt-4">
+              {isLoggedIn && (
+                <Button asChild className="w-full">
+                  <Link to="/dashboard" onClick={() => setIsOpen(false)}>
+                    대시보드
+                  </Link>
+                </Button>
+              )}
+              <Button
+                className="w-full cursor-pointer"
+                variant={"outline"}
+                onClick={() => {
+                  handleLogInOut();
+                  setIsOpen(false);
+                }}>
+                {isLoggedIn ? "로그아웃" : "로그인"}
+              </Button>
+            </div>
           </div>
         </div>
       )}
