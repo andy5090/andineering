@@ -3,6 +3,8 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 export default [
   index("common/pages/landing.tsx"),
   route("/agentic-ai", "common/pages/agentic-ai.tsx"),
+  route("/privacy", "common/pages/privacy.tsx"),
+  route("/terms", "common/pages/terms.tsx"),
   route("/dashboard", "features/organizations/pages/dashboard.tsx"),
   route("/agents", "features/agents/pages/agents-list.tsx"),
   route("/api/user-report", "features/users/api/user-report.ts"),

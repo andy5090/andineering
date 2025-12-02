@@ -14,7 +14,7 @@ import { signInGoogle } from "~/lib/auth/client";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Kagentic Solution" },
+    { title: "Andineering Agentic AI Solution" },
     {
       name: "description",
       content:
