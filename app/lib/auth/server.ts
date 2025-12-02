@@ -13,18 +13,18 @@ export const auth = betterAuth({
       verification,
     },
   }),
-  emailAndPassword: {
-    enabled: true,
-  },
+  // emailAndPassword: {
+  //   enabled: true,
+  // },
   socialProviders: {
     google: {
       prompt: "select_account",
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
-    kakao: {
-      clientId: process.env.KAKAO_CLIENT_ID!,
-      clientSecret: process.env.KAKAO_CLIENT_SECRET!,
-    },
+    // kakao: {
+    //   clientId: process.env.KAKAO_CLIENT_ID!,
+    //   clientSecret: process.env.KAKAO_CLIENT_SECRET!,
+    // },
   },
 });

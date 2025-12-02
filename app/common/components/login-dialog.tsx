@@ -208,7 +208,7 @@ export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
               Google로 로그인
             </Button>
 
-            <Button
+            {/* <Button
               type="button"
               variant="outline"
               className="w-full"
@@ -224,7 +224,7 @@ export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
                 />
               </svg>
               Kakao로 로그인
-            </Button>
+            </Button> */}
           </div>
         </div>
       </DialogContent>
