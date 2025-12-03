@@ -25,6 +25,7 @@ export const auth = betterAuth({
     kakao: {
       clientId: process.env.KAKAO_CLIENT_ID!,
       clientSecret: process.env.KAKAO_CLIENT_SECRET!,
+      disableDefaultScope: true,
     },
   },
 });
