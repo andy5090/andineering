@@ -24,9 +24,10 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import resend from "~/lib/resend";
 import { WelcomeEmail } from "react-email-starter/emails/welcome";
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:5173";
+const baseUrl =
+  process.env.VERCEL_ENV === "production"
+    ? "https://andineering.com"
+    : "http://localhost:5173";
 
 export const loader = async ({ request }) => {
   const session = await auth.api.getSession({
@@ -108,7 +109,10 @@ export const action = async ({ request }: Route.ActionArgs) => {
       to: session.user.email,
       subject: "Welcome to Andineering",
       react: (
-        <WelcomeEmail username={session.user.name} buttonLink={`${baseUrl}`} />
+        <WelcomeEmail
+          username={session.user.name}
+          buttonLink={`${baseUrl}/agentic-ai`}
+        />
       ),
     }),
   ]);
