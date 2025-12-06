@@ -1,9 +1,9 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import z from "zod";
 import { protectedProcedure } from "~/lib/trpc/trpc";
-import { apiKeys, organizations } from "./schema";
+import { apiKeys, apiUseLogs } from "./schema";
 import db from "~/lib/db";
-import { eq } from "drizzle-orm";
+import { eq, and, desc, gte, lte } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export const organizationsRouter = {
@@ -21,7 +21,10 @@ export const organizationsRouter = {
         .select()
         .from(apiKeys)
         .where(
-          eq(apiKeys.organizationId, organizationId) && eq(apiKeys.name, name)
+          and(
+            eq(apiKeys.organizationId, organizationId),
+            eq(apiKeys.name, name)
+          )
         );
 
       if (apiKeysData.length > 0) {
@@ -57,7 +60,10 @@ export const organizationsRouter = {
         .select()
         .from(apiKeys)
         .where(
-          eq(apiKeys.id, apiKeyId) && eq(apiKeys.organizationId, organizationId)
+          and(
+            eq(apiKeys.id, apiKeyId),
+            eq(apiKeys.organizationId, organizationId)
+          )
         );
 
       if (!apiKey) {
@@ -71,5 +77,76 @@ export const organizationsRouter = {
       return {
         success: true,
       };
+    }),
+
+  getApiUsageByAgent: protectedProcedure
+    .input(
+      z.object({
+        agentId: z.number(),
+        organizationId: z.number().optional(),
+        startDate: z.coerce.date().optional(),
+        endDate: z.coerce.date().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { agentId, organizationId, startDate, endDate } = input;
+
+      const conditions = [eq(apiUseLogs.agentId, agentId)];
+
+      if (organizationId) {
+        conditions.push(eq(apiUseLogs.organizationId, organizationId));
+      }
+
+      if (startDate) {
+        conditions.push(gte(apiUseLogs.loggedAt, startDate));
+      }
+
+      if (endDate) {
+        // Add one day to endDate to include the entire end date
+        const endDateInclusive = new Date(endDate);
+        endDateInclusive.setHours(23, 59, 59, 999);
+        conditions.push(lte(apiUseLogs.loggedAt, endDateInclusive));
+      }
+
+      const usageLogs = await db
+        .select()
+        .from(apiUseLogs)
+        .where(and(...conditions))
+        .orderBy(desc(apiUseLogs.loggedAt));
+
+      return usageLogs;
+    }),
+
+  getApiUsageByOrganization: protectedProcedure
+    .input(
+      z.object({
+        organizationId: z.number(),
+        startDate: z.coerce.date().optional(),
+        endDate: z.coerce.date().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { organizationId, startDate, endDate } = input;
+
+      const conditions = [eq(apiUseLogs.organizationId, organizationId)];
+
+      if (startDate) {
+        conditions.push(gte(apiUseLogs.loggedAt, startDate));
+      }
+
+      if (endDate) {
+        // Add one day to endDate to include the entire end date
+        const endDateInclusive = new Date(endDate);
+        endDateInclusive.setHours(23, 59, 59, 999);
+        conditions.push(lte(apiUseLogs.loggedAt, endDateInclusive));
+      }
+
+      const usageLogs = await db
+        .select()
+        .from(apiUseLogs)
+        .where(and(...conditions))
+        .orderBy(desc(apiUseLogs.loggedAt));
+
+      return usageLogs;
     }),
 } satisfies TRPCRouterRecord;
